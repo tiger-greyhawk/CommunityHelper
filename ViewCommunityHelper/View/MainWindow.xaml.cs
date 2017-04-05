@@ -35,6 +35,14 @@ namespace ViewCommunityHelper.View
             //DataContext = "{Binding Path=ResVM}"
         }
 
+        private void TabControl_MouseEnter(object sender, MouseEventArgs e)
+        {
+                //MessageBox.Show("", "");
+            
+        }
+
+
+
 
 
         /*        public Window ResolveWindow()

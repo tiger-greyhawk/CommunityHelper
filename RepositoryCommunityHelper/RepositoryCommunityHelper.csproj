@@ -42,14 +42,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseClass.cs" />
     <Compile Include="BaseMagic.cs" />
+    <Compile Include="DTO\FactionDto.cs" />
     <Compile Include="DTO\PlayerCreateDto.cs" />
     <Compile Include="DTO\PlayerDto.cs" />
     <Compile Include="DTO\RequestResourceCreateDto.cs" />
     <Compile Include="DTO\RequestResourceDto.cs" />
+    <Compile Include="Entity\Faction.cs" />
     <Compile Include="Entity\Player.cs" />
     <Compile Include="Entity\RequestResource.cs" />
+    <Compile Include="Mapper\ConverterJson.cs" />
     <Compile Include="Mapper\IMapper.cs" />
     <Compile Include="Mapper\Mapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

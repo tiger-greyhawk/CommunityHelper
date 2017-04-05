@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 
 
 namespace RepositoryCommunityHelper.WebService
@@ -20,6 +21,8 @@ namespace RepositoryCommunityHelper.WebService
         //private static string server = "http://shold.tk:8181/backend/";
         //static HttpWebRequest request = (HttpWebRequest)WebRequest.Create(server + "_login");
         private string _sCookies;
+        public ServicePoint spSite;
+        public string ConnectionState;
 
 
 
@@ -48,7 +51,7 @@ namespace RepositoryCommunityHelper.WebService
 
         public ConnectionProperties()
         {
-            _serverAddres = "192.168.10.25";
+            _serverAddres = "192.168.10.110";
             _serverPort = "8080";
             _login = "test222";
             _password = "test";
@@ -56,6 +59,9 @@ namespace RepositoryCommunityHelper.WebService
             _urlServer = "http://" + _serverAddres + ":" + _serverPort + "/" + _subServer + "/";
             SCookieCollection = new CookieCollection();
             //this._sCookies = _sCookies;
+            //Uri siteUri = new Uri(_urlServer);
+            //spSite = ServicePointManager.FindServicePoint(siteUri);
+            //spSite.MaxIdleTime = 600000;
         }
 
         public string ServerAddres

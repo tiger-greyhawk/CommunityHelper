@@ -4,22 +4,38 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace RepositoryCommunityHelper.WebService
 {
     public class Auth
     {
         private ConnectionProperties connectionProperties;
+        private HttpWebRequest request;
 
         public Auth(ConnectionProperties connectionProperties)
         {
             this.connectionProperties = connectionProperties;
         }
 
+/*        public Task<string> DoAuthAsync()
+        {
+            return Task.Factory.StartNew(() =>
+                {
+                    return DoAuth();
+                }
+            );
+        }*/
+
+        public void UnAuth()
+        {
+            request.Abort();
+        }
+
         public string DoAuth()
         {
             string server = connectionProperties.UrlServer;
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(server + "login");
+            request = (HttpWebRequest)WebRequest.Create(server + "login");
             request.ContentType = "application/x-www-form-urlencoded";
             request.Method = "GET";
             request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; rv:47.0) Gecko/20100101 Firefox/47.0";
@@ -43,6 +59,9 @@ namespace RepositoryCommunityHelper.WebService
             System.Net.ServicePointManager.Expect100Continue = false;
             connectionProperties.SCookieCollection.Add(response.Cookies);
             connectionProperties.SCookies = String.IsNullOrEmpty(response.Headers["Set-Cookie"]) ? "" : response.Headers["Set-Cookie"];
+            connectionProperties.ConnectionState = String.IsNullOrEmpty(response.Headers["Connection"])
+                ? ""
+                : response.Headers["Connection"];
             response.Close();
             request = null;
             request = (HttpWebRequest)WebRequest.Create(server + "login");
@@ -67,6 +86,11 @@ namespace RepositoryCommunityHelper.WebService
 
             connectionProperties.SCookieCollection = response.Cookies;
             connectionProperties.SCookies = String.IsNullOrEmpty(response.Headers["Set-Cookie"]) ? "" : response.Headers["Set-Cookie"];
+            connectionProperties.ConnectionState = String.IsNullOrEmpty(response.Headers["Connection"])
+                ? ""
+                : response.Headers["Connection"];
+
+
             Stream data = (Stream)response.GetResponseStream();
             StreamReader reader = new StreamReader(data, Encoding.UTF8);
             string temp = reader.ReadToEnd();
@@ -74,7 +98,7 @@ namespace RepositoryCommunityHelper.WebService
             return temp;
         }
 
-        public StreamReader GetMe()
+        public string GetMe()
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(connectionProperties.UrlServer + "player/me?_type=json");
             request.ContentType = "application/json;charset=UTF-8";
@@ -92,9 +116,10 @@ namespace RepositoryCommunityHelper.WebService
 
                 Stream data = (Stream)response.GetResponseStream();
                 StreamReader reader = new StreamReader(data, Encoding.UTF8);
+                string temp = reader.ReadToEnd();
                 //DataContractJsonSerializer json = new DataContractJsonSerializer(typeof(Player));
                 //return (Player)json.ReadObject(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(reader.ReadToEnd())));
-                return reader;
+                return temp;
             }
             catch
             {

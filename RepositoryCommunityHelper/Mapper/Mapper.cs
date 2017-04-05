@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using RepositoryCommunityHelper.DTO;
 using RepositoryCommunityHelper.Entity;
 
@@ -38,13 +40,17 @@ namespace RepositoryCommunityHelper.Mapper
             return dto;
         }
 
-        public RequestResourceDto Map(RequestResource requestResource)
+        public RequestResourceDto Map(RequestResource requestResource, Player player)
         {
             if (requestResource == null)
             {
                 throw new ArgumentNullException(nameof(requestResource));
             }
 
+            if (player == null)
+            {
+                throw new ArgumentNullException(nameof(player));
+            }
 
             /*if (player == null)
             {
@@ -60,7 +66,7 @@ namespace RepositoryCommunityHelper.Mapper
                 requestResource.Amount,
                 requestResource.OnWay,
                 requestResource.Max_quantum,
-                requestResource.PlayerId,
+                player.Nick,
                 Map(requestResource.Timestamp),
                 Map(requestResource.CurrentTimestamp)
                 );
@@ -70,6 +76,23 @@ namespace RepositoryCommunityHelper.Mapper
             return dto;
         }
 
+        public FactionDto Map(Faction faction)
+        {
+            FactionDto factionDto = new FactionDto(
+                faction.id,
+                faction.houseId,
+                faction.name,
+                faction.owner,
+                faction.officer1,
+                faction.officer2,
+                faction.officer3,
+                faction.officer4,
+                faction.officer5,
+                faction.officerChat,
+                faction.basicChat
+               );
+            return factionDto;
+        }
         /*public RequestResourceDto Map(RequestResource requestResource)
         {
             if (requestResource == null)
@@ -84,39 +107,58 @@ namespace RepositoryCommunityHelper.Mapper
             return vm;
         }*/
 
-        public IEnumerable<RequestResourceDto> Map(IEnumerable<RequestResource> requestsResources)//, IEnumerable<Player> players)
+        public ObservableCollection<RequestResourceDto> Map(IEnumerable<RequestResource> requestsResources, IEnumerable<Player> players)
         {
             if (requestsResources == null)
             {
                 throw new ArgumentNullException("requestResources");
             }
-            /*
+            
             if (players == null)
             {
                 throw new ArgumentNullException("players");
             }
-            */
-
+            
+            ObservableCollection<RequestResourceDto> result = new ObservableCollection<RequestResourceDto>();
             foreach (var reqRes in requestsResources)
             {
 
                 //yield return this.Map(reqRes, players.FirstOrDefault(player => player.Id == reqRes.PlayerId));
-                yield return this.Map(reqRes);
+                result.Add(this.Map(reqRes, players.FirstOrDefault(player => player.Id == reqRes.PlayerId)));
+                //yield return this.Map(reqRes);
             }
+            return (ObservableCollection<RequestResourceDto>) result;
         }
 
 
-        public IEnumerable<PlayerDto> Map(IEnumerable<Player> players)
+        public ObservableCollection<PlayerDto> Map(IEnumerable<Player> players)
         {
             if (players == null)
             {
                 throw new ArgumentNullException("players");
             }
 
+            ObservableCollection<PlayerDto> result = new ObservableCollection<PlayerDto>();
             foreach (var player in players)
             {
-                yield return this.Map(player);
+                result.Add(this.Map(player));
             }
+            return result;
+        }
+
+        public ObservableCollection<FactionDto> Map(IEnumerable<Faction> factions)
+        {
+            if (factions == null)
+            {
+                throw new ArgumentNullException(nameof(factions));
+            }
+
+            ObservableCollection<FactionDto> result = new ObservableCollection<FactionDto>();
+            foreach (var faction in factions)
+            {
+                result.Add(this.Map(faction));
+            }
+            return result;
         }
     }
 }

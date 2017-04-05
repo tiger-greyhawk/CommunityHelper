@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Threading;
 using RepositoryCommunityHelper.DTO;
 using RepositoryCommunityHelper.Entity;
 using RepositoryCommunityHelper.Mapper;
@@ -10,21 +12,51 @@ using RepositoryCommunityHelper.WebService;
 
 namespace RepositoryCommunityHelper.Repository
 {
-    public class Repository : BaseClass, IRepository
+    public class Repository : BaseMagic, IRepository
     {
         private readonly IService _restClient;
         private readonly IMapper _mapper;
+        private readonly ConverterJson converter = new ConverterJson();
 
-        private IEnumerable<Player> players { get; set; }
+        private IEnumerable<Player> _players { get; set; }
         private IEnumerable<RequestResource> _requestResources { get; set; }
+        private ObservableCollection<RequestResourceDto> _requestResourceDtos;
+        private IEnumerable<Faction> _factions { get; set; }
+        private ObservableCollection<FactionDto> _factionDtos;
+        private ObservableCollection<PlayerDto> _playerDtos;
 
+        //public IEnumerable<RequestResourceDto> RequestResourceDtos { get; set; }
 
+        private Auth auth { get; }
 
+        public string Auth()
+        {
+            auth.DoAuth();
+            string temp = auth.GetMe();
+            return temp;
+        }
 
-        //private TimerCallback timeCB;
-        //private Timer Timer1;
+        public void UnAuth()
+        {
+            auth.UnAuth();
+        }
 
-        public Repository(IService restClient, IMapper mapper)
+        private TimerCallback timeCB;
+        private Timer Timer1;
+
+        private bool _connected = false;
+
+        public bool Connected
+        {
+            get { return _connected; }
+            set
+            {
+                _connected = value;
+                RaisePropertyChanged(nameof(Connected));
+            }
+        }
+
+        public Repository(IService restClient, IMapper mapper, Auth auth)
         {
             if (restClient == null)
             {
@@ -36,63 +68,156 @@ namespace RepositoryCommunityHelper.Repository
             }
             _mapper = mapper;
             _restClient = restClient;
-            players = new ObservableCollection<Player>();
+            _players = new ObservableCollection<Player>();
             _requestResources = new ObservableCollection<RequestResource>();
+            _factions = new ObservableCollection<Faction>();
+            this.auth = auth;
+            //Auth();
+            timeCB = new TimerCallback(TimeTick);
 
-            //timeCB = new TimerCallback(TimeTick);
-
-            //Timer1 = new Timer(timeCB, null, 10000, 10000);
+            Timer1 = new Timer(timeCB, null, 5000, 5000);
+            RequestResourceDtos = new ObservableCollection<RequestResourceDto>();
+            //RequestResourceDtos.CollectionChanged += NotifyCollectionChanged;
+            FactionDtos = new ObservableCollection<FactionDto>();
+            PlayerDtos = new ObservableCollection<PlayerDto>();
 
         }
 
-        /*TODO 
+        
+        /*public void NotifyCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            //This will get called when the collection is changed
+            //RaisePropertyChanged("RequestResourceDtos");
+        }*/
+
+        public ObservableCollection<RequestResourceDto> RequestResourceDtos //{ get; set; }
+        {
+            get
+            {
+                //_requestResourceDtos = GetRequestResourceDtos();
+                return _requestResourceDtos;
+            }
+            set
+            {
+                _requestResourceDtos = value; 
+                RaisePropertyChanged(nameof(RequestResourceDtos));
+                //NotifyCollectionChanged(this, null);
+            }
+        }
+
+        public ObservableCollection<FactionDto> FactionDtos
+        {
+            get { return _factionDtos; }
+            set
+            {
+                _factionDtos = value;
+                RaisePropertyChanged(nameof(FactionDtos));
+            }
+        }
+
+        public ObservableCollection<PlayerDto> PlayerDtos
+        {
+            get { return _playerDtos; }
+            set
+            {
+                _playerDtos = value;
+                RaisePropertyChanged(nameof(PlayerDtos));
+            }
+        }
+
+        public PlayerDto FindPlayerDtoById(int id)
+        {
+            foreach (var playerDto in GetPlayerDtos())
+            {
+                if (playerDto.Id == id)
+                    return playerDto;
+            }
+            throw new NullReferenceException();
+        }
+
+        public PlayerDto FindPlayerDtoByNick(string playerNick)
+        {
+            foreach (var playerDto in PlayerDtos)
+            {
+                if (playerDto.Nick == playerNick)
+                    return playerDto;
+            }
+            throw new NullReferenceException();
+        }
+
+        public RequestResourceDto FindRequestResourceDtoById(int id)
+        {
+            foreach (var requestResourceDto in RequestResourceDtos)
+            {
+                if (requestResourceDto.Id == id)
+                    return requestResourceDto;
+            }
+            throw new NullReferenceException();
+        }
+
+        public FactionDto FindFactionDtoById(int id)
+        {
+            foreach (var factionDto in FactionDtos)
+            {
+                if (factionDto.id == id)
+                    return factionDto;
+            }
+            throw new NullReferenceException();
+        }
+
+        /*TODO кэш репы
          * Это как локальный кэш? Нужно ручками делать RefreshPlayers()?
          */
         public IEnumerable<PlayerDto> GetPlayerDtos()
         {
-            //RefreshPlayers();
-            return _mapper.Map(players);
+            RefreshPlayers();
+            PlayerDtos = _mapper.Map(_players);
+            return PlayerDtos;
         }
 
         public IEnumerable<RequestResourceDto> GetRequestResourceDtos()
         {
-            return _mapper.Map(_requestResources);
+            RefreshRequestsResources();
+            RequestResourceDtos = _mapper.Map(_requestResources, _players);
+            return RequestResourceDtos;
+            //return _mapper.Map(_requestResources);
+        }
+
+        public IEnumerable<FactionDto> GetFactionDtos()
+        {
+            RefreshFactions();
+            FactionDtos = _mapper.Map(_factions);
+            return FactionDtos;
         }
 
         public void RefreshPlayers()
         {
+            if (Connected)
             using (var restClient = this._restClient.CreateRequest())
             {
-                players = ConvertJsonToPlayers(restClient.DoGetAsync("player").Result);
+                //_players = null;
+                _players = converter.ConvertJsonToPlayers(restClient.DoGetAsync("player").Result);
             }
         }
 
-        public void RefreshRequestsResources()
+        private void RefreshRequestsResources()
         {
-            using (var restClient = this._restClient.CreateRequest())
+            if (Connected)
+                using (var restClient = this._restClient.CreateRequest())
+                {
+                    //_requestResources = null;
+                    _requestResources = converter.ConvertJsonToRequestResources(restClient.DoGetAsync("requests/resources").Result);
+                }
+        }
+
+        public void RefreshFactions()
+        {
+            if (Connected)
+                using (var restClient = this._restClient.CreateRequest())
             {
-                _requestResources = ConvertJsonToRequestResources(restClient.DoGetAsync("requests/resources").Result);
-                //var players = convertPlayers(baseService.restClient.DoGetAsync("player").Result);
-                //var players = convertPlayers(baseService.PlayerService.GetAllPlayers());
-                //return this.mapper.Map(requestsResources, players);
+                //_factions = null;
+                _factions = converter.ConvertJsonToFactions(restClient.DoGetAsync("faction").Result);
             }
-        }
-
-
-        public IEnumerable<RequestResource> ConvertJsonToRequestResources(string dataToSerialize)
-        {
-            //ObservableCollection<RequestResource> reqsRes = new ObservableCollection<RequestResource>();
-            DataContractJsonSerializer json = new DataContractJsonSerializer(typeof(List<RequestResource>));
-            List<RequestResource> clear = (List<RequestResource>)json.ReadObject(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(dataToSerialize)));
-            return clear;
-        }
-
-        public IEnumerable<Player> ConvertJsonToPlayers(string dataToSerialize)
-        {
-            //ObservableCollection<RequestResource> reqsRes = new ObservableCollection<RequestResource>();
-            DataContractJsonSerializer json = new DataContractJsonSerializer(typeof(List<Player>));
-            List<Player> clear = (List<Player>)json.ReadObject(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(dataToSerialize)));
-            return clear;
         }
 
 
@@ -102,14 +227,14 @@ namespace RepositoryCommunityHelper.Repository
         {
             //RefreshPlayers();
             //TestTimer();
-            return this.mapper.Map(players);
+            return this.mapper.Map(_players);
         }
 
         public IEnumerable<RequestResourceViewModel> GetRequestResourceViewModels()
         {
             RefreshRequestsResources();
             RefreshPlayers();
-            return this.mapper.Map(requestResources, players);
+            return this.mapper.Map(requestResources, _players);
         }
 
         public IEnumerable<PlayerViewModel> PlayerViewModels
@@ -120,8 +245,8 @@ namespace RepositoryCommunityHelper.Repository
                 //RefreshPlayers();
                 //TestTimer();
                 
-//                this.mapper.Map(players);
-//                foreach (var p in players)
+//                this.mapper.Map(_players);
+//                foreach (var p in _players)
 //                {
 //                    var pl = this.mapper.Map(p);
 //                    pvm.Add(pl);
@@ -129,7 +254,7 @@ namespace RepositoryCommunityHelper.Repository
 //                return pvm;
                 
 
-                return this.mapper.Map(players);
+                return this.mapper.Map(_players);
             }
             set
             {
@@ -144,21 +269,24 @@ namespace RepositoryCommunityHelper.Repository
             {
                 //RefreshPlayers();
                 //TestTimer();
-                return this.mapper.Map(requestResources, players);
+                return this.mapper.Map(requestResources, _players);
             }
             set
             {
                 RefreshRequestsResources();
             }
         }
-
+        */
         void TimeTick(object state)
         {
             //Console.WriteLine("sdf");
             RefreshPlayers();
             //PlayerViewModels = GetPlayerViewModels();
 
-            RefreshRequestsResources();
-        }*/
+            //RefreshRequestsResources();
+            
+            GetRequestResourceDtos();
+            GetFactionDtos();
+        }/**/
     }
 }

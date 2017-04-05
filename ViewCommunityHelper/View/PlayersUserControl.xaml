@@ -7,13 +7,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <DataGrid ItemsSource="{Binding Path=PlayerVM, UpdateSourceTrigger=PropertyChanged}">
+        <DataGrid ItemsSource="{Binding Path=PlayerVMs, UpdateSourceTrigger=PropertyChanged}">
             <DataGrid.Columns>
-               <!-- <DataGridTextColumn Header="Time" Binding="{Binding Path=Timestamp}" />
-                <DataGridTextColumn Header="Nick" Binding="{Binding Path=PlayerNick}" />
-                <DataGridTextColumn Header="Type/Amount" />
-                <DataGridTextColumn Header="Max/Sended" />
-                <DataGridTextColumn Header="Village" /> -->
+                <DataGridTextColumn Header="Time" Binding="{Binding Path=Timestamp}" />
+                <DataGridTextColumn Header="Nick" Binding="{Binding Path=Nick}" />
+                
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

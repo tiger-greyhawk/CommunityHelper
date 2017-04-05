@@ -7,16 +7,37 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Grid>
-            <DataGrid ItemsSource="{Binding Path=RequestResourceVM, UpdateSourceTrigger=PropertyChanged}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Time" Binding="{Binding Path=Timestamp}" />
-                    <DataGridTextColumn Header="Nick" Binding="{Binding Path=PlayerNick}" />
-                    <DataGridTextColumn Header="Type/Amount" />
-                    <DataGridTextColumn Header="Max/Sended" />
-                    <DataGridTextColumn Header="Village" />
-                </DataGrid.Columns>
-            </DataGrid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Column="0">
+            <ScrollViewer Height="300" VerticalScrollBarVisibility="Auto">
+                <DataGrid ItemsSource="{Binding Path=RequestResourceDtos, UpdateSourceTrigger=PropertyChanged}"
+                      AutoGenerateColumns="True"
+                      ScrollViewer.CanContentScroll="True">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="IsSelected" Value="{Binding IsSelected}" />
+                        </Style>
+                    </DataGrid.Resources>
+                    <!--<DataGrid.Columns>
+                        <DataGridTextColumn Header="Time" Binding="{Binding Path=Timestamp}" />
+                        <DataGridTextColumn Header="Nick" Binding="{Binding Path=PlayerNick}" />
+                        <DataGridTextColumn Header="Type/Amount" Binding="{Binding Path=TypeAmount}" />
+                        <DataGridTextColumn Header="Name" Binding="{Binding Path=Name}" />
+                        <DataGridTextColumn Header="Max/Sended" Binding="{Binding Path=MaxSended}" />
+                        <DataGridTextColumn Header="Village" Binding="{Binding Path=Village}"/>
+                    </DataGrid.Columns>-->
+                </DataGrid>
+            </ScrollViewer>
+        </Grid>
+        <Grid Row="1">
+            <Button Command="{Binding Path=AddRequestResourceCommand}">add</Button>
         </Grid>
     </Grid>
 </UserControl>

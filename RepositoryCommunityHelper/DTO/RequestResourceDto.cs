@@ -15,15 +15,29 @@ namespace RepositoryCommunityHelper.DTO
         public int Amount { get; set; }
         public int OnWay { get; set; }
         public int MaxQuantum { get; set; }
-        public int PlayerId { get; set; }
+        public string PlayerNick { get; set; }
         public DateTime Timestamp { get; set; }
         public DateTime CurrentTimestamp { get; set; }
+
+        private bool _isSelected;
+
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+            set
+            {
+                _isSelected = value;
+                RaisePropertyChanged(nameof(IsSelected));
+            }
+        }
+
 
         public RequestResourceDto()
         {
         }
 
-        public RequestResourceDto(int id, int worldId, string type, string name, int villageId, int amount, int onWay, int maxQuantum, int playerId, DateTime timestamp, DateTime currentTimestamp)
+
+        public RequestResourceDto(int id, int worldId, string type, string name, int villageId, int amount, int onWay, int maxQuantum, string playerNick, DateTime timestamp, DateTime currentTimestamp)
         {
             Id = id;
             WorldId = worldId;
@@ -33,7 +47,7 @@ namespace RepositoryCommunityHelper.DTO
             Amount = amount;
             OnWay = onWay;
             MaxQuantum = maxQuantum;
-            PlayerId = playerId;
+            PlayerNick = playerNick;
             Timestamp = timestamp;
             CurrentTimestamp = currentTimestamp;
         }

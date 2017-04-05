@@ -39,6 +39,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -56,12 +57,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Container\IRequestsResourcesManagmentClientContainer.cs" />
+    <Compile Include="Container\IContainer.cs" />
+    <Compile Include="Container\MainContainer.cs" />
     <Compile Include="Container\MainWindowAdapter.cs" />
-    <Compile Include="Container\RequestsResourcesManagmentClientContainer.cs" />
+    <Compile Include="MapperVMDto\IMapperVM.cs" />
+    <Compile Include="MapperVMDto\MapperToFromVM.cs" />
+    <Compile Include="ViewModel\FactionViewModel.cs" />
+    <Compile Include="ViewModel\FactionViewModelCollection.cs" />
     <Compile Include="ViewModel\IViewModelFactory.cs" />
+    <Compile Include="ViewModel\MenuCommand.cs" />
     <Compile Include="ViewModel\PlayerViewModel.cs" />
+    <Compile Include="ViewModel\PlayerViewModelCollection.cs" />
+    <Compile Include="ViewModel\RelayCommand.cs" />
+    <Compile Include="ViewModel\RequestResourceEditorViewModel.cs" />
     <Compile Include="ViewModel\RequestResourceViewModel.cs" />
+    <Compile Include="ViewModel\RequestResourceViewModelCollection.cs" />
     <Compile Include="ViewModel\ViewModelFactory.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\RequestsResourcesViewModel.cs" />

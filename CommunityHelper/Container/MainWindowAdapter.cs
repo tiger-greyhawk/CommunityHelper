@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Input;
 using ViewCommunityHelper.View;
 using CommunityHelper.ViewModel;
+using RepositoryCommunityHelper.WebService;
 
 namespace CommunityHelper.Container
 {
@@ -9,16 +11,20 @@ namespace CommunityHelper.Container
     {
         private readonly IViewModelFactory vmFactory;
         private bool initialized;
+        public Window _WpfWindow;
+        //public Auth Auth;
+        
 
         public MainWindowAdapter(Window wpfWindow, IViewModelFactory viewModelFactory)
             : base(wpfWindow)
         {
             if (viewModelFactory == null)
             {
-                throw new ArgumentNullException("viewModelFactory");
+                throw new ArgumentNullException(nameof(viewModelFactory));
             }
-
+            this._WpfWindow = wpfWindow;
             this.vmFactory = viewModelFactory;
+            //this.Auth = auth;
             //EnsureInitialized();
         }
 
@@ -26,8 +32,9 @@ namespace CommunityHelper.Container
 
         public override void Close()
         {
-            this.EnsureInitialized();
+            //this.EnsureInitialized();
             base.Close();
+            initialized = false;
         }
 
         public override IWindow CreateChild(object viewModel)
@@ -39,7 +46,10 @@ namespace CommunityHelper.Container
         public override void Show()
         {
             this.EnsureInitialized();
+            //this.ShowActivated = false;
             base.Show();
+            //WpfWindow.Activate();
+
         }
 
         public override bool? ShowDialog()
@@ -62,6 +72,7 @@ namespace CommunityHelper.Container
         {
             if (this.initialized)
             {
+                
                 return;
             }
 
@@ -69,6 +80,22 @@ namespace CommunityHelper.Container
             this.WpfWindow.DataContext = vm;
             //this.DeclareKeyBindings(vm);
 
+            /*var myCommandBinding = new CommandBinding(
+                    PresentationCommands.ShowGameFunctionalWindow,
+                    vm.AddRR_Executed,
+                    vm.AddRR_CanExecute);*/
+            //CommandBinding bind = new CommandBinding(PresentationCommands.ShowGameFunctionalWindow);
+
+            // Присоединение обработчика событий
+
+            // Регистрация привязки
+            //CommandBindings.Add(bind);
+            WpfWindow.CommandBindings.Add(new CommandBinding(PresentationCommands.ShowGameFunctionalWindowCommand, vm.ShowGameFunctionalWindow ));
+            WpfWindow.CommandBindings.Add(new CommandBinding(PresentationCommands.ShowFactionsWindowCommand, vm.ShowFactionsWindow));
+            WpfWindow.CommandBindings.Add(new CommandBinding(PresentationCommands.Exit, vm.Exit));
+            //WpfWindow.CommandBindings.Add(new CommandBinding(PresentationCommands.Connect, vm.Connect));
+            //CommandBindings.Add(bind);
+            //CommandManager.RegisterClassCommandBinding(typeof(PresentationCommands), bind);
             this.initialized = true;
         }
     }

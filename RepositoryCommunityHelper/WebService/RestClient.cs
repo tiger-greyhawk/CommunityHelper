@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepositoryCommunityHelper.WebService
@@ -67,6 +68,8 @@ namespace RepositoryCommunityHelper.WebService
         {
             return Task.Factory.StartNew(() =>
             {
+                //Thread.Sleep(1000);
+                //System.Threading.Thread.Sleep(10000);
                 HttpWebRequest request =
                     (HttpWebRequest)WebRequest.Create(this._connectionProperties.UrlServer + url + "/?_type=json");
                 request.CookieContainer = new CookieContainer();
@@ -77,17 +80,28 @@ namespace RepositoryCommunityHelper.WebService
                 //if (!string.IsNullOrEmpty(_connectionProperties.SCookies))
                 //    request.Headers.Add(HttpRequestHeader.Cookie, _connectionProperties.SCookies);
 
+                string result = "";
                 request.AllowAutoRedirect = false;
-                var response = (HttpWebResponse)request.GetResponse();
-                //request.BeginGetResponse(new AsyncCallback(OnResponse), request);
-                //System.Net.ServicePointManager.Expect100Continue = false;
-                _connectionProperties.SCookieCollection.Add(response.Cookies);
-                Stream data = (Stream)response.GetResponseStream();
-                StreamReader reader = new StreamReader(data, Encoding.UTF8);
-                //DataContractJsonSerializer json = new DataContractJsonSerializer(typeof(List<Player>));
-                //List<Player> players = ((List<Player>)json.ReadObject(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(reader.ReadToEnd()))));
-                string result = reader.ReadToEnd();
-                response.Close();
+                try
+                {
+                    var response = (HttpWebResponse)request.GetResponse();
+                    //request.BeginGetResponse(new AsyncCallback(OnResponse), request);
+                    //System.Net.ServicePointManager.Expect100Continue = false;
+                    _connectionProperties.SCookieCollection.Add(response.Cookies);
+                    Stream data = (Stream)response.GetResponseStream();
+                    StreamReader reader = new StreamReader(data, Encoding.UTF8);
+                    //DataContractJsonSerializer json = new DataContractJsonSerializer(typeof(List<Player>));
+                    //List<Player> players = ((List<Player>)json.ReadObject(new System.IO.MemoryStream(Encoding.UTF8.GetBytes(reader.ReadToEnd()))));
+                    result = reader.ReadToEnd();
+                    response.Close();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    result = null;
+                    //throw;
+                }
+                
                 return result;
             });
         }

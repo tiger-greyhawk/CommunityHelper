@@ -6,25 +6,25 @@ namespace CommunityHelper.ViewModel
 {
     class ViewModelFactory : IViewModelFactory
     {
-        private readonly IRepository repository;
+        private readonly IRepository _repository;
 
         public ViewModelFactory(IRepository repository)
         {
             if (repository == null)
             {
-                throw new ArgumentNullException("repository");
+                throw new ArgumentNullException(nameof(repository));
             }
-            this.repository = repository;
+            _repository = repository;
         }
 
         public MainViewModel Create(IWindow window)
         {
             if (window == null)
             {
-                throw new ArgumentNullException("window");
+                throw new ArgumentNullException(nameof(window));
             }
 
-            return new MainViewModel(repository, window);
+            return new MainViewModel(_repository, window);
         }
     }
 }

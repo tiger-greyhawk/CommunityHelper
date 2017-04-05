@@ -11,7 +11,8 @@ namespace CommunityHelper
     public partial class App : Application
     {
         
-        RequestsResourcesManagmentClientContainer container;
+        //RequestsResourcesManagmentClientContainer container;
+        private MainContainer mainContainer;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -26,18 +27,20 @@ namespace CommunityHelper
             else
             {
                 //var container =
-                container =
-    new RequestsResourcesManagmentClientContainer();
-                container.ResolveWindow().Show();
+                //container = new RequestsResourcesManagmentClientContainer();
+                //container.ResolveWindow().Show();
+
+                mainContainer = new MainContainer();
+                mainContainer.ResolveWindow().Show();
 
             }
         }
 
-        protected override void OnExit(ExitEventArgs e)
+        /*protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
             //container.Close();
             //container.ResolveWindow().Close();
-        }
+        }*/
     }
 }
