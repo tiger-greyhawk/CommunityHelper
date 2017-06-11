@@ -1,0 +1,40 @@
+﻿<Window x:Class="ViewCommunityHelper.View.WindowXaml.FactionEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ViewCommunityHelper.View.WindowXaml"
+        xmlns:pm="clr-namespace:ViewCommunityHelper.View"
+        mc:Ignorable="d"
+        Title="FactionEditorWindow" Height="300" Width="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="10"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Column="1" Grid.Row="1">
+            <StackPanel  Orientation="Horizontal">
+                <Label>Name</Label>
+                <TextBox Width="50" Name="TextBoxName" Text="{Binding Path=Name}" ></TextBox>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+
+                <TextBox Width="150" Text="{Binding Path=name}" ></TextBox>
+<!--                <TextBox Width="50" Text="{Binding Path=owner}" ></TextBox>-->
+                <Button Width="50" 
+                        Content="Add"  
+                        Command="{x:Static pm:PresentationCommands.Accept}" IsDefault="True" >
+                    <!--CommandParameter="{Binding ElementName=NewReqRes}">-->
+
+                </Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
+

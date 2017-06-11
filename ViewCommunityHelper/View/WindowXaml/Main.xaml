@@ -7,7 +7,7 @@
         xmlns:command="clr-namespace:ViewCommunityHelper.View"
         xmlns:view="clr-namespace:ViewCommunityHelper.View"
         mc:Ignorable="d"
-        Title="Main" Height="500" Width="200" MaxWidth="300">
+        Title="{DynamicResource MainTitle}" Height="500" Width="250" MaxWidth="300">
 <!--<Window.CommandBindings>
     <CommandBinding Command="command:PresentationCommands.AddRR" Executed="AddRR"></CommandBinding>
 </Window.CommandBindings>-->
@@ -36,6 +36,12 @@
                             <Image Name="ConnectImage" Source="{Binding Path=ConnectImage.Source}" />
                         </MenuItem.Icon>
                     </MenuItem>
+                    <MenuItem Header="New User" Command="{Binding Path=ShowRegisterNewUserWindowCommand }">
+                        <MenuItem.Icon>
+                            <Image Source="/ViewCommunityHelper;component/Icons/cross.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    
                     <MenuItem Header="Exit" Command="{x:Static command:PresentationCommands.Exit }">
                         <MenuItem.Icon>
                             <Image Source="/ViewCommunityHelper;component/Icons/cross.png" />
@@ -49,33 +55,40 @@
                     </MenuItem.Icon>
                     <!--                    <MenuItem Header="Resources" Click="MenuItem_Click">-->
 
-                    <MenuItem Header="Resources" Command="{x:Static command:PresentationCommands.ShowGameFunctionalWindowCommand}" >
+                    <MenuItem Header="Resources" Command="{x:Static command:PresentationCommands.ShowGameFunctionalWindowCommand}"  IsEnabled="{Binding Path=Auth.ConnectionProperties.Connected}">
                         <MenuItem.ToolTip>Resources</MenuItem.ToolTip>
                         <!--<MenuItem Header="Resources" Command="{Binding Path=AddRR}" >    -->
                         <MenuItem.Icon>
                             <Image Source="/ViewCommunityHelper;component/Icons/lorry.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Factions" Command="{x:Static command:PresentationCommands.ShowFactionsWindowCommand}" >
+                    <MenuItem Header="Factions" Command="{x:Static command:PresentationCommands.ShowFactionsWindowCommand}" IsEnabled="{Binding Path=Auth.ConnectionProperties.Connected}">
                         <MenuItem.ToolTip>Resources</MenuItem.ToolTip>
                         <MenuItem.Icon>
                             <Image Source="/ViewCommunityHelper;component/Icons/group.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Players" Command="{Binding Path=ShowPlayerWindowCommand}" >
+                    <MenuItem Header="Players" Command="{Binding Path=ShowPlayerWindowCommand}" IsEnabled="{Binding Path=Auth.ConnectionProperties.Connected}">
                         <MenuItem.ToolTip>Show Players</MenuItem.ToolTip>
                         <MenuItem.Icon>
                             <Image Source="/ViewCommunityHelper;component/Icons/group.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
+                <!-- Опции -->
                 <MenuItem Width="30">
                     <MenuItem.Icon>
                         <Image Source="/ViewCommunityHelper;component/Icons/cog.png"/>
                     </MenuItem.Icon>
-<!--                    <MenuItem Header="Resources" Click="MenuItem_Click">-->
-                    <MenuItem Header="Resources" Command="{x:Static command:PresentationCommands.ShowGameFunctionalWindowCommand}" >
-                    <!--<MenuItem Header="Resources" Command="{Binding Path=AddRR}" >    -->
+                    <MenuItem Header="{DynamicResource MOptions}" Command="{Binding Path=ShowOptionsWindowCommand}" >
+                        <MenuItem.Icon>
+                            <Image Source="/ViewCommunityHelper;component/Icons/cog.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="{DynamicResource MSettingMyPlayers}" Command="{Binding Path=ShowSettingMyPlayersWindowCommand}" >
+                        <MenuItem.Icon>
+                            <Image Source="/ViewCommunityHelper;component/Icons/cog.png"/>
+                        </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
                 <!-- О программе/справка -->
@@ -83,16 +96,26 @@
                     <MenuItem.Icon>
                         <Image Source="/ViewCommunityHelper;component/Icons/information.png"/>
                     </MenuItem.Icon>
-                    <MenuItem  Header="About">
+                    <MenuItem  Header="{DynamicResource MAbout}">
                     </MenuItem>
-                    <MenuItem  Header="Help">
+                    <MenuItem  Header="{DynamicResource MHelp}">
                     </MenuItem>
+                    
+                </MenuItem>
+                <MenuItem Width="30"
+                ItemsSource="{Binding Path=MenuLanguage}">
+                    <MenuItem.Icon>
+                        <Image Source="/ViewCommunityHelper;component/Icons/world.png" />
+                    </MenuItem.Icon>
                 </MenuItem>
             </Menu>
+            
         </Grid>
 
-        <Grid Grid.Column="1" Grid.Row="1">
-            
+        <Grid Grid.Column="1" Grid.Row="2">
+            <StackPanel>
+            <Ellipse HorizontalAlignment="Left" Width="20" Height="20" Fill="{Binding Path=ConnectedStatusColor}" ></Ellipse>
+            </StackPanel>
             <!--<ListBox ItemsSource="{Binding Path=RequestResourceViewModelCollection.RequestResourceVM, UpdateSourceTrigger=PropertyChanged}" >
             </ListBox>-->
 

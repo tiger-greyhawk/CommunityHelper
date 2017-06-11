@@ -7,7 +7,7 @@ namespace RepositoryCommunityHelper.DTO
 {
     class PlayerCreateDto
     {
-        //private int id { get; set; }
+        //private int Id { get; set; }
         private int userId { get; set; }
         //public static readonly DependencyProperty NickProperty;
         private string nick { get; set; }

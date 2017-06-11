@@ -51,10 +51,10 @@ namespace CommunityHelper.MapperVMDto
         public FactionViewModel MapToVM(FactionDto factionDto)
         {
             FactionViewModel factionViewModel = new FactionViewModel(
-                factionDto.id,
-                factionDto.houseId,
-                factionDto.name,
-                factionDto.owner,
+                factionDto.Id,
+                factionDto.HouseId,
+                factionDto.Name,
+                factionDto.Owner,
                 factionDto.officer1,
                 factionDto.officer2,
                 factionDto.officer3,

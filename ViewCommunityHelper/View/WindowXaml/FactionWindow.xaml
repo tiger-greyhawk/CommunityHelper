@@ -5,29 +5,88 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ViewCommunityHelper.View.WindowXaml"
         mc:Ignorable="d"
-        Title="Faction" Height="300" Width="300">
+        Title="Faction" Height="350" Width="650">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="200*" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="300*" />
             <ColumnDefinition Width="10" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="10"/>
-            <RowDefinition Height="200"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="250*"/>
             <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Column="1" Grid.Row="1">
-            <Grid>
-                <DataGrid ItemsSource="{Binding Path=FactionDtos, UpdateSourceTrigger=PropertyChanged}">
+<!--        <Border Name="DisplayArea">-->
+<!--        <StackPanel Grid.Column="1" Grid.Row="1" Name="DisplayArea1" Margin="10,10,10,10">-->
+        <Grid Grid.Column="1" Grid.Row="1">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="filter factions by name: "/>
+                <TextBox Name="FilterByFactionName" Text="{Binding Path=FilterFactionsByName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="160" Height="20"></TextBox>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Column="1" Grid.Row="2">
+            <DataGrid Margin="10, 10, 10, 100" 
+                      VerticalAlignment="Top" 
+                      Name="Factions" 
+                      ItemsSource="{Binding Path=FactionsView, UpdateSourceTrigger=PropertyChanged}"
+                      SelectedValue="{Binding Path=SelectedValue, Mode=TwoWay}"
+                      SelectedValuePath="Id"
+                      AutoGenerateColumns="False"
+                      
+                      CanUserAddRows="False"
+                      SelectionMode="Single"
+                      SelectionChanged="Factions_OnSelectionChanged">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="IsSelected" Value="{Binding IsSelected}" />
+                        </Style>
+                    </DataGrid.Resources>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Name" Binding="{Binding Path=name}" />
-                        <DataGridTextColumn Header="Number Players" Binding="{Binding Path=PlayerCount}" />
+                        <DataGridTextColumn Header="Name" Binding="{Binding Path=Name}" Width="120" />
+                        <DataGridTextColumn Header="Owner" Binding="{Binding Path=Owner}" Width="*" />
+<!--                        <DataGridTextColumn Header="Number Players" Binding="{Binding Path=PlayerCount}" />-->
                     </DataGrid.Columns>
                 </DataGrid>
-            </Grid>
-            <Button>Create</Button>
-            <Button>Join</Button>
-        </StackPanel>
+            <Button Margin="10,70" VerticalAlignment="Bottom" Content="Create" Command="{Binding Path=CreateFactionCommand}"></Button>
+            <Button Margin="10,40" VerticalAlignment="Bottom" Content="Join" Command="{Binding Path=JoinFactionCommand}" CommandParameter="{Binding ElementName=Factions, Path=SelectedItem.Id}"></Button>
+            <Button Margin="10,10" VerticalAlignment="Bottom" 
+                    Content="Delete" 
+                    Command="{Binding Path=DeleteFactionCommand}" 
+                    CommandParameter="{Binding ElementName=Factions, Path=SelectedItem.Id}"
+                    IsEnabled="{Binding Path=DeleteButtonEnabled}"/>
+        </Grid>
+            <!--<Button Content="Join" Command="{Binding Path=JoinFactionCommand}" CommandParameter="{Binding ElementName=Factions, Path=SelectedItem.Id}"></Button>
+            <Button Margin="10" VerticalAlignment="Bottom" Content="Create" Command="{Binding Path=CreateFactionCommand}"></Button>-->
+<!--        </StackPanel>-->
+<!--        </Border>-->
+<!--        <StackPanel Grid.Column="3" Grid.Row="2">-->
+            <Grid Grid.Column="3" Grid.Row="2">
+                <DataGrid 
+                    VerticalAlignment="Top" 
+                    Margin="10, 10, 10, 100"
+                    Name="Players" 
+                    ItemsSource="{Binding Path=PlayerDtos, UpdateSourceTrigger=PropertyChanged}"
+                    CanUserAddRows="False">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="IsSelected" Value="{Binding IsSelected}" />
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <!--<DataGridTextColumn Header="Name" Binding="{Binding Path=name}" />
+                        <DataGridTextColumn Header="Number Players" Binding="{Binding Path=PlayerCount}" />-->
+                    </DataGrid.Columns>
+                </DataGrid>
+            <Button Margin="10,70" VerticalAlignment="Bottom" Content="Eliminate" Command="{Binding Path=EliminateCommand}" CommandParameter="{Binding ElementName=Players, Path=SelectedItem.Id}"></Button>
+            <Button Margin="10,40" VerticalAlignment="Bottom" Content="Invite"></Button>
+            <Button Margin="10,10" VerticalAlignment="Bottom" Content="Improve"></Button>
+        </Grid>
+        
+<!--        </StackPanel>-->
+        
     </Grid>
 </Window>

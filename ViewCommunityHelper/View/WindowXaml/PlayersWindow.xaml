@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ViewCommunityHelper.View.WindowXaml"
         xmlns:view="clr-namespace:ViewCommunityHelper.View"
         mc:Ignorable="d"
-        Title="PlayersWindow" Height="300" Width="300">
+        Title="PlayersWindow" Height="400" Width="600">
     <Grid>
         <view:PlayersUserControl></view:PlayersUserControl>
     </Grid>

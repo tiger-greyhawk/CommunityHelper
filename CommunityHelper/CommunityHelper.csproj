@@ -59,15 +59,18 @@
     </ApplicationDefinition>
     <Compile Include="Container\IContainer.cs" />
     <Compile Include="Container\MainContainer.cs" />
+    <Compile Include="Container\MainViewModelContainer.cs" />
     <Compile Include="Container\MainWindowAdapter.cs" />
     <Compile Include="MapperVMDto\IMapperVM.cs" />
     <Compile Include="MapperVMDto\MapperToFromVM.cs" />
+    <Compile Include="ViewModel\Collection\FactionViewModelCollection.cs" />
     <Compile Include="ViewModel\FactionViewModel.cs" />
-    <Compile Include="ViewModel\FactionViewModelCollection.cs" />
+    <Compile Include="ViewModel\Internal\UpdateCommand.cs" />
     <Compile Include="ViewModel\IViewModelFactory.cs" />
     <Compile Include="ViewModel\MenuCommand.cs" />
     <Compile Include="ViewModel\PlayerViewModel.cs" />
     <Compile Include="ViewModel\PlayerViewModelCollection.cs" />
+    <Compile Include="ViewModel\PlayerViewModelCollectionOld.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\RequestResourceEditorViewModel.cs" />
     <Compile Include="ViewModel\RequestResourceViewModel.cs" />
@@ -98,6 +101,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

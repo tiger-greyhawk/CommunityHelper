@@ -21,7 +21,9 @@
             
             <TextBox Width="50" Name="TextBoxName" Text="{Binding Path=Name}" ></TextBox>
             <TextBox Width="50" Text="{Binding Path=PlayerNick}" ></TextBox>
-            <Button Width="20" Content="{Binding Path=id}"  Command="{x:Static pm:PresentationCommands.Accept}" IsDefault="True"><!--CommandParameter="{Binding ElementName=NewReqRes}">-->
+            <Button Width="20" 
+                    Content="{Binding Path=id}"  
+                    Command="{x:Static pm:PresentationCommands.Accept}" IsDefault="True" ><!--CommandParameter="{Binding ElementName=NewReqRes}">-->
             
         </Button>
         </StackPanel>

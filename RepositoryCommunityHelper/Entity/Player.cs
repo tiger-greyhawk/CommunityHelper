@@ -43,6 +43,23 @@ namespace RepositoryCommunityHelper.Entity
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
+        public Player()
+        {
+            
+        }
+
+        public Player(int id, int userId, string nick, int invite, string motivater, long lastAccess, int factionId, string avatar)
+        {
+            this.id = id;
+            this.userId = userId;
+            this.nick = nick;
+            this.invite = invite;
+            this.motivater = motivater;
+            this.lastAccess = lastAccess;
+            this.factionId = factionId;
+            this.avatar = avatar;
+        }
+
         public int Id
         {
             get
@@ -156,8 +173,8 @@ namespace RepositoryCommunityHelper.Entity
         {
             get
             {
-                if (avatar == null) Avatar = "G:\\_Foto\\gerka_ava2.jpg";
-                if (nick == "Tiger_Greyhawk") Avatar = "G:\\_Foto\\gerka.jpg";
+                if (avatar == null) Avatar = "U:\\1.jpg";
+                if (nick == "Tiger_Greyhawk") Avatar = "U:\\1.jpg";
                 return avatar;
                 //return 1;
             }

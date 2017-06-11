@@ -1,0 +1,57 @@
+﻿<Window x:Class="ViewCommunityHelper.View.WindowXaml.SettingMyPlayersWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ViewCommunityHelper.View.WindowXaml"
+        xmlns:pm="clr-namespace:ViewCommunityHelper.View"
+        mc:Ignorable="d"
+        Title="SettingMyPlayersWindow" Height="300" Width="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="10"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Column="1" Grid.Row="1">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Activated player: "></Label>
+                <ComboBox Width="150" 
+                          ItemsSource="{Binding Path=MyPlayers, UpdateSourceTrigger=PropertyChanged}" 
+                          DisplayMemberPath="NickWorld" 
+                          SelectedItem="{Binding Path=ActivePlayer}" />
+            </StackPanel>
+            <DataGrid Name="MyPlayers" ItemsSource="{Binding Path=MyPlayers, UpdateSourceTrigger=PropertyChanged}"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      SelectedValue="{Binding Path=SelectedMyPlayer, Mode=TwoWay}"
+                      SelectedValuePath="Id">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Nick" Binding="{Binding Path=Nick}" Width="120" />
+<!--                    <DataGridCheckBoxColumn Header="Current" Binding="{Binding Path=IsCurrentPlayer}" />-->
+                    <DataGridCheckBoxColumn Header="Select" Binding="{Binding Path=IsSelected, UpdateSourceTrigger=PropertyChanged}" />
+<!--                    <DataGridTextColumn Header="World" Binding="{Binding Path=worldId}" Width="120" />-->
+<!--                    <DataGridCheckBoxColumn Header="Using" Binding="{Binding Path=use}" />-->
+                </DataGrid.Columns>
+            </DataGrid>
+            <StackPanel Orientation="Vertical">
+                <Button Content="Delete selected player" Command="{Binding Path=DeletePlayerCommand}" CommandParameter="{Binding ElementName=MyPlayers, Path=SelectedItem}"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBox Name="NewPlayerNick" Width="100" Text="{Binding Path=NewPlayerDto.Nick}"/>
+                    <TextBox Width="100" Text="{Binding Path=NewPlayerDto.Motivater}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                <Button Content="Add new player" Command="{Binding Path=AddPlayerCommand}" CommandParameter="{Binding ElementName=NewPlayerNick, Path=Text}"/>
+<!--                <Button Content="Delete player" Command="{Binding Path=DeletePlayerCommand}" CommandParameter="{Binding ElementName=MyPlayers, Path=SelectedItem}"/>-->
+<!--                <ComboBox ItemsSource="{Binding Path=MyPlayers, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Nick" SelectedItem="{Binding Path=MyPlayers.IsCurrentPlayer}"></ComboBox>-->
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
+

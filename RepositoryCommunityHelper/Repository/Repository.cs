@@ -34,6 +34,7 @@ namespace RepositoryCommunityHelper.Repository
             auth.DoAuth();
             string temp = auth.GetMe();
             return temp;
+            //return null;
         }
 
         public void UnAuth()
@@ -75,7 +76,7 @@ namespace RepositoryCommunityHelper.Repository
             //Auth();
             timeCB = new TimerCallback(TimeTick);
 
-            Timer1 = new Timer(timeCB, null, 5000, 5000);
+            //Timer1 = new Timer(timeCB, null, 5000, 5000);
             RequestResourceDtos = new ObservableCollection<RequestResourceDto>();
             //RequestResourceDtos.CollectionChanged += NotifyCollectionChanged;
             FactionDtos = new ObservableCollection<FactionDto>();
@@ -159,7 +160,7 @@ namespace RepositoryCommunityHelper.Repository
         {
             foreach (var factionDto in FactionDtos)
             {
-                if (factionDto.id == id)
+                if (factionDto.Id == id)
                     return factionDto;
             }
             throw new NullReferenceException();
@@ -196,7 +197,7 @@ namespace RepositoryCommunityHelper.Repository
             using (var restClient = this._restClient.CreateRequest())
             {
                 //_players = null;
-                _players = converter.ConvertJsonToPlayers(restClient.DoGetAsync("player").Result);
+                _players = converter.ConvertJsonToPlayersCollection(restClient.DoGetAsync("player"));
             }
         }
 
@@ -206,7 +207,7 @@ namespace RepositoryCommunityHelper.Repository
                 using (var restClient = this._restClient.CreateRequest())
                 {
                     //_requestResources = null;
-                    _requestResources = converter.ConvertJsonToRequestResources(restClient.DoGetAsync("requests/resources").Result);
+                    _requestResources = converter.ConvertJsonToRequestResourcesCollection(restClient.DoGetAsync("requests/resources"));
                 }
         }
 
@@ -216,7 +217,7 @@ namespace RepositoryCommunityHelper.Repository
                 using (var restClient = this._restClient.CreateRequest())
             {
                 //_factions = null;
-                _factions = converter.ConvertJsonToFactions(restClient.DoGetAsync("faction").Result);
+                _factions = converter.ConvertJsonToFactionsCollection(restClient.DoGetAsync("faction"));
             }
         }
 

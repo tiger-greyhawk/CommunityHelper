@@ -34,7 +34,7 @@ namespace ViewCommunityHelper.View
         {
             window.Owner = this.wpfWindow;
             window.DataContext = viewModel;
-            //WindowAdapter.ConfigureBehaviorByVM(window);
+            WindowAdapter.ConfigureBehaviorByVM(window);
             return new WindowAdapter(window);
         }
 
@@ -79,7 +79,8 @@ namespace ViewCommunityHelper.View
 
         private static void ConfigureBehaviorByVM(Window window)
         {
-            
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            window.CommandBindings.Add(new CommandBinding(PresentationCommands.Accept, (sender, e) => window.DialogResult = true));
         }
     }
 }

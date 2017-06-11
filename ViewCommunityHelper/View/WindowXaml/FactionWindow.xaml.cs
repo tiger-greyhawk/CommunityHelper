@@ -22,5 +22,13 @@ namespace ViewCommunityHelper.View.WindowXaml
         {
             InitializeComponent();
         }
+
+
+        private void Factions_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var grid = sender as DataGrid;
+            if (grid.SelectedItem != null)
+                grid.ScrollIntoView(grid.SelectedItem);
+        }
     }
 }

@@ -20,6 +20,12 @@ namespace RepositoryCommunityHelper.Mapper
             return time;
         }
 
+        public long Map(DateTime timestamp)
+        {
+            long unixTime = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).Milliseconds;
+            return unixTime;
+        }
+
         public PlayerDto Map(Player player)
         {
             if (player == null)
@@ -38,6 +44,26 @@ namespace RepositoryCommunityHelper.Mapper
             //vm.Id = player.Id;
             //vm.Nick = player.Nick;
             return dto;
+        }
+
+        public Player Map(PlayerDto player)
+        {
+            if (player == null)
+            {
+                throw new ArgumentNullException(nameof(player));
+            }
+            var newPlayer = new Player(
+                player.Id,
+                player.UserId,
+                player.Nick,
+                player.Invite,
+                player.Motivater,
+                Map(player.LastAccess),
+                player.FactionId,
+                player.Avatar);
+            //vm.Id = player.Id;
+            //vm.Nick = player.Nick;
+            return newPlayer;
         }
 
         public RequestResourceDto Map(RequestResource requestResource, Player player)
@@ -78,11 +104,31 @@ namespace RepositoryCommunityHelper.Mapper
 
         public FactionDto Map(Faction faction)
         {
-            FactionDto factionDto = new FactionDto(
-                faction.id,
-                faction.houseId,
-                faction.name,
-                faction.owner,
+            //FactionDto factionDto = new FactionDto(
+            return new FactionDto(
+                faction.Id,
+                faction.HouseId,
+                faction.Name,
+                faction.Owner,
+                faction.Officer1,
+                faction.Officer2,
+                faction.Officer3,
+                faction.Officer4,
+                faction.Officer5,
+                faction.OfficerChat,
+                faction.BasicChat
+               );
+            //return factionDto;
+        }
+
+        public Faction Map(FactionDto faction)
+        {
+            //FactionDto factionDto = new FactionDto(
+            return new Faction(
+                faction.Id,
+                faction.HouseId,
+                faction.Name,
+                faction.Owner,
                 faction.officer1,
                 faction.officer2,
                 faction.officer3,
@@ -91,8 +137,9 @@ namespace RepositoryCommunityHelper.Mapper
                 faction.officerChat,
                 faction.basicChat
                );
-            return factionDto;
+            //return factionDto;
         }
+
         /*public RequestResourceDto Map(RequestResource requestResource)
         {
             if (requestResource == null)
@@ -145,6 +192,21 @@ namespace RepositoryCommunityHelper.Mapper
             }
             return result;
         }
+
+/*        public ObservableCollection<PlayerDto> Map(IEnumerable<PlayerDto> players)
+        {
+            if (players == null)
+            {
+                throw new ArgumentNullException("players");
+            }
+
+            ObservableCollection<PlayerDto> result = new ObservableCollection<PlayerDto>();
+            foreach (var player in players)
+            {
+                result.Add(this.Map(player));
+            }
+            return result;
+        }*/
 
         public ObservableCollection<FactionDto> Map(IEnumerable<Faction> factions)
         {

@@ -9,6 +9,8 @@ namespace RepositoryCommunityHelper.Mapper
     {
         ObservableCollection<RequestResourceDto> Map(IEnumerable<RequestResource> requestsResources, IEnumerable<Player> players);
         //ObservableCollection<RequestResourceDto> Map(IEnumerable<RequestResource> requestsResources);
+
+        PlayerDto Map(Player player);
         ObservableCollection<PlayerDto> Map(IEnumerable<Player> players);
         ObservableCollection<FactionDto> Map(IEnumerable<Faction> factions);
     }

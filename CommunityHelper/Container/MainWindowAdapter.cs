@@ -12,21 +12,28 @@ namespace CommunityHelper.Container
         private readonly IViewModelFactory vmFactory;
         private bool initialized;
         public Window _WpfWindow;
+        //private ConnectionProperties _connectionProperties;
         //public Auth Auth;
         
 
-        public MainWindowAdapter(Window wpfWindow, IViewModelFactory viewModelFactory)
+        public MainWindowAdapter(Window wpfWindow, IViewModelFactory viewModelFactory)//, ConnectionProperties con)
             : base(wpfWindow)
         {
             if (viewModelFactory == null)
             {
                 throw new ArgumentNullException(nameof(viewModelFactory));
             }
+            //_connectionProperties = con;
             this._WpfWindow = wpfWindow;
             this.vmFactory = viewModelFactory;
             //this.Auth = auth;
             //EnsureInitialized();
         }
+
+        /*public void UpdateConnectionProp(ConnectionProperties con)
+        {
+            _connectionProperties = con;
+        }*/
 
         #region IWindow Members
 
